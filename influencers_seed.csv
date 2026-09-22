@@ -1,0 +1,6 @@
+﻿후보ID,데이터구분,표시명,핸들,국가,카테고리,팔로워,참여율,계정유형,수집방식,프로필출처URL,연락이메일,이메일출처URL,검증상태,확인일자,수신거부·동의상태,연락처·발송규제
+SAMPLE-001,샘플,샘플 뷰티 A,sample_beauty_a,베트남,뷰티·스킨케어,48000,3.2%,프로페셔널(가상),샘플(수동생성),https://example.com/sample/influencer-001,sample001@example.com,https://example.com/sample/contact-001,해당없음(샘플),해당없음(샘플),해당없음(샘플),확인 필요(국가별)
+SAMPLE-002,샘플,샘플 푸드 B,sample_food_b,베트남,식품·간식,120000,2.1%,프로페셔널(가상),샘플(수동생성),https://example.com/sample/influencer-002,sample002@example.com,https://example.com/sample/contact-002,해당없음(샘플),해당없음(샘플),해당없음(샘플),확인 필요(국가별)
+SAMPLE-003,샘플,샘플 라이프 C,sample_life_c,베트남,생활용품,22000,5.4%,개인(가상),샘플(수동생성),https://example.com/sample/influencer-003,sample003@example.com,https://example.com/sample/contact-003,해당없음(샘플),해당없음(샘플),해당없음(샘플),확인 필요(국가별)
+SAMPLE-004,샘플,샘플 패션 D,sample_fashion_d,태국,패션·잡화,85000,2.8%,프로페셔널(가상),샘플(수동생성),https://example.com/sample/influencer-004,sample004@example.com,https://example.com/sample/contact-004,해당없음(샘플),해당없음(샘플),해당없음(샘플),확인 필요(국가별)
+SAMPLE-005,샘플,샘플 펫 E,sample_pet_e,태국,반려동물 용품,15000,6.1%,프로페셔널(가상),샘플(수동생성),https://example.com/sample/influencer-005,sample005@example.com,https://example.com/sample/contact-005,해당없음(샘플),해당없음(샘플),해당없음(샘플),확인 필요(국가별)
