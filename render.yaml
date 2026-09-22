@@ -1,7 +1,13 @@
 services:
   - type: web
-    name: influencer-platform
-    env: python
+    name: gloeum-v2240-preview
+    runtime: docker
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    healthCheckPath: /_stcore/health
+    envVars:
+      - key: BRAVE_SEARCH_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: HUNTER_API_KEY
+        sync: false
