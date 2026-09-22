@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>인플루언서 후보 찾기 · 샘플 화면 v0.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1F4; --panel:#FFFFFF; --ink:#14212B; --muted:#576775; --line:#D2DBE2;
+  --accent:#0E6E7A; --accent-ink:#FFFFFF; --sel:#E1F0F2;
+  --warn:#B7791F; --warn-bg:#FFF4DC; --warn-ink:#5F4200;
+  --ph:#FBE3B0; --ph-ink:#5A3D00; --ok:#1F7A4D; --ok-bg:#E2F3EA;
+  --stripe1:#F7E9C4; --stripe2:#EFD79A;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1A22; --panel:#16232D; --ink:#E6EDF2; --muted:#93A4B1; --line:#2A3B47;
+    --accent:#4FB3BF; --accent-ink:#0B1A20; --sel:#1C3540;
+    --warn:#E0B45A; --warn-bg:#2E2611; --warn-ink:#F1DCA6;
+    --ph:#5B4614; --ph-ink:#FBE3B0; --ok:#6CCB99; --ok-bg:#183327;
+    --stripe1:#3A3013; --stripe2:#2E2611;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1A22; --panel:#16232D; --ink:#E6EDF2; --muted:#93A4B1; --line:#2A3B47;
+  --accent:#4FB3BF; --accent-ink:#0B1A20; --sel:#1C3540;
+  --warn:#E0B45A; --warn-bg:#2E2611; --warn-ink:#F1DCA6;
+  --ph:#5B4614; --ph-ink:#FBE3B0; --ok:#6CCB99; --ok-bg:#183327;
+  --stripe1:#3A3013; --stripe2:#2E2611;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+  font-size:15px; line-height:1.6;
+}
+.band{
+  background:repeating-linear-gradient(-45deg,var(--stripe1) 0 12px,var(--stripe2) 12px 24px);
+  color:var(--warn-ink); font-weight:500; text-align:center; padding:9px 16px; font-size:14px;
+}
+.wrap{max-width:1180px; margin:0 auto; padding:24px 16px 56px}
+header h1{font-size:28px; line-height:1.25; margin:0 0 6px; font-weight:700; letter-spacing:-0.01em}
+header p{margin:0; color:var(--muted); max-width:62ch}
+.grid{display:grid; gap:20px; margin-top:22px; grid-template-columns:minmax(0,1fr)}
+@media (min-width:960px){
+  .grid{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); align-items:start}
+  .draft-col{position:sticky; top:calc(env(safe-area-inset-top,0px) + 16px)}
+}
+.step{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px 18px; margin-bottom:16px}
+.step:last-child{margin-bottom:0}
+.step h2{font-size:18px; margin:0 0 12px; display:flex; align-items:center; gap:10px; font-weight:700}
+.step h2 .n{
+  display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px;
+  border-radius:50%; background:var(--accent); color:var(--accent-ink); font-size:13px; font-weight:700;
+}
+.fields{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.fields .wide{grid-column:1/-1}
+label{display:block; font-size:13px; font-weight:500; margin-bottom:4px; color:var(--muted)}
+input[type=text],input[type=email],select{
+  width:100%; font:inherit; color:var(--ink); background:var(--panel);
+  border:1px solid var(--line); border-radius:6px; padding:8px 10px; min-height:40px;
+}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.btn{
+  font:inherit; font-weight:500; color:var(--ink); background:var(--panel);
+  border:1px solid var(--line); border-radius:6px; padding:8px 14px; min-height:40px; cursor:pointer;
+}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
+.databar{display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--line); font-size:13px; color:var(--muted)}
+.databar .src{flex:1 1 220px}
+.databar .btn{min-height:34px; padding:4px 12px; font-size:13px}
+.count{font-size:13px; color:var(--muted); margin:0 0 8px}
+.tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:6px}
+table{border-collapse:collapse; width:100%; min-width:600px; font-size:14px}
+th{text-align:left; font-weight:500; font-size:13px; color:var(--muted); padding:8px 8px; border-bottom:1px solid var(--line); background:var(--bg); white-space:nowrap}
+td{padding:9px 8px; border-bottom:1px solid var(--line); vertical-align:middle}
+td:not(:first-child){white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--sel)}
+tbody tr.sel{background:var(--sel); box-shadow:inset 3px 0 0 var(--accent)}
+td.num{text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums}
+th.num{text-align:right}
+.pick{font:inherit; font-weight:500; color:var(--ink); background:none; border:0; padding:0; text-align:left; cursor:pointer}
+.handle{display:block; font-size:12px; color:var(--muted)}
+.badge{display:inline-block; padding:0 8px; border-radius:4px; font-size:12px; line-height:20px; border:1px solid var(--line); white-space:nowrap}
+.b-sample{background:var(--warn-bg); color:var(--warn-ink); border-color:var(--warn)}
+.b-pro{background:var(--ok-bg); color:var(--ok); border-color:var(--ok)}
+.b-personal{background:var(--warn-bg); color:var(--warn-ink); border-color:var(--warn)}
+.b-ver{background:var(--ok-bg); color:var(--ok); border-color:var(--ok)}
+.empty{padding:22px 12px; text-align:center; color:var(--muted)}
+.draftbox{
+  white-space:pre-wrap; word-break:break-word; background:var(--bg); border:1px solid var(--line);
+  border-radius:6px; padding:14px; font-size:14px; line-height:1.75; min-height:180px; max-height:440px; overflow:auto;
+}
+.draftbox.blank{color:var(--muted); display:flex; align-items:center; justify-content:center; text-align:center}
+.ph{background:var(--ph); color:var(--ph-ink); border-radius:3px; padding:0 3px}
+.who{font-size:13px; color:var(--muted); margin:0 0 10px}
+.actions{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:12px}
+#msg{font-size:13px; color:var(--muted)}
+#msg.err{color:var(--warn-ink); background:var(--warn-bg); padding:2px 8px; border-radius:4px}
+.notes{list-style:none; margin:14px 0 0; padding:0}
+.notes li{border-left:3px solid var(--warn); background:var(--warn-bg); color:var(--warn-ink); padding:6px 10px; margin:6px 0; font-size:13px; border-radius:0 4px 4px 0}
+.sender{display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); margin-bottom:14px}
+footer{margin-top:24px; font-size:13px; color:var(--muted)}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="band" role="note">샘플 화면입니다. 목록의 인물과 이메일 주소는 모두 가상이며, 실제 발송에 쓸 수 없습니다.</div>
+<div class="wrap">
+  <header>
+    <h1>인플루언서 후보 찾기</h1>
+    <p>제품과 국가를 고르면 후보 목록과 첫 접촉 이메일 초안이 나옵니다. 지금은 샘플 데이터로 흐름만 확인하는 v0.1 화면입니다.</p>
+  </header>
+
+  <div class="grid">
+    <main>
+      <section class="step" aria-labelledby="h1">
+        <h2 id="h1"><span class="n">1</span>조건 입력</h2>
+        <div class="fields">
+          <div class="wide">
+            <label for="product">제품명 (이메일 초안에 들어갑니다)</label>
+            <input type="text" id="product" placeholder="예: 비건 선크림" autocomplete="off">
+          </div>
+          <div>
+            <label for="fCountry">국가</label>
+            <select id="fCountry"></select>
+          </div>
+          <div>
+            <label for="fCat">카테고리</label>
+            <select id="fCat"></select>
+          </div>
+          <div>
+            <label for="fSort">정렬</label>
+            <select id="fSort">
+              <option value="eng">참여율 높은 순</option>
+              <option value="fol">팔로워 많은 순</option>
+            </select>
+          </div>
+        </div>
+        <div class="databar">
+          <span class="src" id="src"></span>
+          <input type="file" id="file" accept=".csv,text/csv" hidden>
+          <button class="btn" type="button" id="btnLoad">CSV 파일 불러오기</button>
+          <button class="btn" type="button" id="btnReset">샘플로 되돌리기</button>
+        </div>
+      </section>
+
+      <section class="step" aria-labelledby="h2">
+        <h2 id="h2"><span class="n">2</span>후보 목록</h2>
+        <p class="count" id="count" aria-live="polite"></p>
+        <div class="tablewrap">
+          <table>
+            <caption class="sr">인플루언서 후보 목록. 행을 선택하면 오른쪽에 이메일 초안이 나옵니다.</caption>
+            <thead>
+              <tr>
+                <th scope="col">후보</th>
+                <th scope="col">국가</th>
+                <th scope="col">카테고리</th>
+                <th scope="col" class="num">팔로워</th>
+                <th scope="col" class="num">참여율</th>
+                <th scope="col">계정 유형</th>
+                <th scope="col">검증 상태</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <aside class="draft-col">
+      <section class="step" aria-labelledby="h3">
+        <h2 id="h3"><span class="n">3</span>첫 접촉 이메일 초안</h2>
+        <div class="sender">
+          <div><label for="sCompany">회사명</label><input type="text" id="sCompany" autocomplete="off"></div>
+          <div><label for="sName">담당자 이름</label><input type="text" id="sName" autocomplete="off"></div>
+          <div><label for="sEmail">회신 이메일</label><input type="email" id="sEmail" autocomplete="off"></div>
+        </div>
+        <p class="who" id="who"></p>
+        <div class="draftbox blank" id="draft">왼쪽 목록에서 후보를 고르면<br>영어 이메일 초안이 나옵니다.</div>
+        <div class="actions">
+          <button class="btn primary" type="button" id="btnCopy" disabled>초안 복사</button>
+          <span id="msg" role="status" aria-live="polite"></span>
+        </div>
+        <ul class="notes" id="notes"></ul>
+      </section>
+    </aside>
+  </div>
+
+  <footer>v0.1 · 인스타그램 검색 연결 전 · 이메일을 자동으로 보내지 않습니다. 복사한 초안은 사람이 검토한 뒤 직접 보냅니다.</footer>
+</div>
+
+<script>
+/* PURE-START */
+const SAMPLE = [
+  {id:'SAMPLE-001', kind:'샘플', name:'샘플 뷰티 A',   handle:'sample_beauty_a',  country:'베트남', category:'뷰티·스킨케어',  followers:48000,  eng:3.2, acct:'프로페셔널(가상)', email:'sample001@example.com', status:'해당없음(샘플)'},
+  {id:'SAMPLE-002', kind:'샘플', name:'샘플 푸드 B',   handle:'sample_food_b',    country:'베트남', category:'식품·간식',      followers:120000, eng:2.1, acct:'프로페셔널(가상)', email:'sample002@example.com', status:'해당없음(샘플)'},
+  {id:'SAMPLE-003', kind:'샘플', name:'샘플 라이프 C', handle:'sample_life_c',    country:'베트남', category:'생활용품',       followers:22000,  eng:5.4, acct:'개인(가상)',       email:'sample003@example.com', status:'해당없음(샘플)'},
+  {id:'SAMPLE-004', kind:'샘플', name:'샘플 패션 D',   handle:'sample_fashion_d', country:'태국',   category:'패션·잡화',      followers:85000,  eng:2.8, acct:'프로페셔널(가상)', email:'sample004@example.com', status:'해당없음(샘플)'},
+  {id:'SAMPLE-005', kind:'샘플', name:'샘플 펫 E',     handle:'sample_pet_e',     country:'태국',   category:'반려동물 용품',  followers:15000,  eng:6.1, acct:'프로페셔널(가상)', email:'sample005@example.com', status:'해당없음(샘플)'}
+];
+
+const COUNTRY_EN = {'베트남':'Vietnam','태국':'Thailand','인도네시아':'Indonesia','필리핀':'the Philippines','말레이시아':'Malaysia','싱가포르':'Singapore','일본':'Japan','미국':'the United States'};
+const CATEGORY_EN = {'뷰티·스킨케어':'beauty and skincare','식품·간식':'food and snack','생활용품':'lifestyle and home goods','패션·잡화':'fashion and accessories','반려동물 용품':'pet products'};
+
+function parseCSV(text){
+  if(text.charCodeAt(0)===0xFEFF) text = text.slice(1);
+  const rows=[]; let row=[], cur='', q=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(q){
+      if(ch==='"'){ if(text[i+1]==='"'){cur+='"'; i++;} else q=false; }
+      else cur+=ch;
+    } else if(ch==='"'){ q=true; }
+    else if(ch===','){ row.push(cur); cur=''; }
+    else if(ch==='\n'||ch==='\r'){
+      if(ch==='\r' && text[i+1]==='\n') i++;
+      row.push(cur); cur='';
+      if(row.length>1 || row[0]!=='') rows.push(row);
+      row=[];
+    } else cur+=ch;
+  }
+  if(cur!=='' || row.length){ row.push(cur); rows.push(row); }
+  return rows;
+}
+
+function toInt(v){ const n=parseInt(String(v).replace(/[^0-9]/g,''),10); return Number.isNaN(n)?null:n; }
+function toPct(v){ const n=parseFloat(String(v).replace('%','')); return Number.isNaN(n)?null:n; }
+
+function mapCsv(rows){
+  if(!rows.length) return {error:'파일이 비어 있습니다.'};
+  const head = rows[0].map(h=>h.trim());
+  const idx = names => { for(const n of names){ const i=head.indexOf(n); if(i>=0) return i; } return -1; };
+  const c = {
+    id:idx(['샘플ID','ID']), kind:idx(['데이터구분']), name:idx(['표시명(가상)','표시명']),
+    handle:idx(['핸들(가상)','핸들']), country:idx(['국가']), category:idx(['카테고리']),
+    followers:idx(['팔로워(가상)','팔로워']), eng:idx(['참여율(가상)','참여율']),
+    acct:idx(['계정유형(가상)','계정유형']), email:idx(['연락이메일(가상)','연락이메일']), status:idx(['검증상태'])
+  };
+  const missing = [['name','표시명'],['handle','핸들'],['country','국가']].filter(([k])=>c[k]<0).map(([,l])=>l);
+  if(missing.length) return {error:'필수 컬럼이 없습니다: '+missing.join(', ')};
+  const list=[]; let skipped=0;
+  rows.slice(1,1001).forEach((r,i)=>{
+    const g = k => c[k]>=0 ? (r[c[k]]||'').trim() : '';
+    if(!g('name') || !g('handle')){ skipped++; return; }
+    list.push({
+      id:g('id')||('ROW-'+(i+1)), kind:g('kind')||'미표시', name:g('name'), handle:g('handle').replace(/^@/,''),
+      country:g('country'), category:g('category'), followers:toInt(g('followers')), eng:toPct(g('eng')),
+      acct:g('acct'), email:g('email'), status:g('status')
+    });
+  });
+  return {list, skipped};
+}
+
+function buildDraft(cand, f){
+  const P = (v,label) => (v && v.trim()) ? v.trim() : '['+label+']';
+  const product = P(f.product,'제품명'), company = P(f.company,'회사명'),
+        sender = P(f.sender,'담당자 이름'), senderEmail = P(f.senderEmail,'회신 이메일');
+  const cEn = COUNTRY_EN[cand.country] || '[국가 영문명]';
+  const catEn = CATEGORY_EN[cand.category] || '[카테고리 영문명]';
+  const text = [
+    'Subject: Collaboration inquiry - '+product+' from '+company,
+    '',
+    'Hello '+cand.name+',',
+    '',
+    'My name is '+sender+' from '+company+', a Korean company that makes '+product+'.',
+    '',
+    'I came across your '+catEn+' content (@'+cand.handle+') and thought it could be a good fit for your audience in '+cEn+'.',
+    '',
+    'We would like to send you a free sample and a one-page product sheet, with no obligation. If you are interested, just reply to this email and I will share the details.',
+    '',
+    'If we work together, we will follow the advertising disclosure rules that apply in '+cEn+'.',
+    '',
+    'If you would prefer not to hear from us, reply with "unsubscribe" and we will not contact you again.',
+    '',
+    'Best regards,',
+    sender,
+    company,
+    senderEmail
+  ].join('\n');
+  const missing = Array.from(new Set(text.match(/\[[^\]]+\]/g) || []));
+  return {text, missing};
+}
+
+function cautions(c){
+  const out=[];
+  if(c.kind==='샘플') out.push('샘플 후보입니다. 실제 인물이 아니며, 이메일 주소(example.com)로는 발송되지 않습니다.');
+  if(c.acct.indexOf('개인')===0) out.push('개인 계정은 공식 API로 팔로워·참여율을 확인할 수 없습니다. 프로페셔널 계정만 확인됩니다.');
+  if(!c.email) out.push('연락 이메일이 없습니다. 인스타그램 DM은 공식 API로 먼저 보내기 어려워, 이메일 등 다른 연락 방법이 필요합니다.');
+  out.push('보내기 전에 '+(c.country||'해당 국가')+'의 연락·발송 규제를 확인하세요. (확인 필요)');
+  return out;
+}
+/* PURE-END */
+
+const $ = id => document.getElementById(id);
+const state = {rows:SAMPLE.slice(), src:'내장 샘플 5건', sel:null, current:null};
+
+function fillSelect(el, values, allLabel){
+  const prev = el.value;
+  el.textContent = '';
+  const o = document.createElement('option'); o.value=''; o.textContent=allLabel; el.appendChild(o);
+  values.forEach(v=>{ const x=document.createElement('option'); x.value=v; x.textContent=v; el.appendChild(x); });
+  el.value = values.includes(prev) ? prev : '';
+}
+
+function refreshFilters(){
+  const uniq = k => Array.from(new Set(state.rows.map(r=>r[k]).filter(Boolean))).sort();
+  fillSelect($('fCountry'), uniq('country'), '전체 국가');
+  fillSelect($('fCat'), uniq('category'), '전체 카테고리');
+  $('src').textContent = '데이터: ' + state.src;
+}
+
+function badge(text, cls){
+  const s = document.createElement('span'); s.className = 'badge ' + cls; s.textContent = text; return s;
+}
+
+function td(child, cls){
+  const t = document.createElement('td'); if(cls) t.className = cls;
+  if(typeof child === 'string') t.textContent = child; else if(child) t.appendChild(child);
+  return t;
+}
+
+function visibleRows(){
+  const co = $('fCountry').value, ca = $('fCat').value, so = $('fSort').value;
+  const list = state.rows.filter(r => (!co || r.country===co) && (!ca || r.category===ca));
+  const key = so==='fol' ? 'followers' : 'eng';
+  list.sort((a,b)=>{
+    const x = a[key], y = b[key];
+    if(x===null && y===null) return 0; if(x===null) return 1; if(y===null) return -1; return y-x;
+  });
+  return list;
+}
+
+function renderList(){
+  const list = visibleRows();
+  const body = $('rows'); body.textContent = '';
+  if(state.sel && !list.some(r=>r.id===state.sel)) state.sel = null;
+  $('count').textContent = list.length + '명의 후보 (전체 ' + state.rows.length + '명)';
+  if(!list.length){
+    const tr = document.createElement('tr'); const c = document.createElement('td');
+    c.colSpan = 7; c.className = 'empty';
+    c.textContent = '조건에 맞는 후보가 없습니다. 국가나 카테고리를 "전체"로 바꿔 보세요.';
+    tr.appendChild(c); body.appendChild(tr);
+  }
+  list.forEach(r=>{
+    const tr = document.createElement('tr');
+    if(r.id===state.sel) tr.className = 'sel';
+    const cell = document.createElement('div');
+    const b = document.createElement('button'); b.type='button'; b.className='pick'; b.textContent=r.name;
+    b.setAttribute('aria-pressed', r.id===state.sel ? 'true' : 'false');
+    const h = document.createElement('span'); h.className='handle'; h.textContent='@'+r.handle;
+    cell.appendChild(b); cell.appendChild(h);
+    tr.appendChild(td(cell));
+    tr.appendChild(td(r.country));
+    tr.appendChild(td(r.category));
+    tr.appendChild(td(r.followers===null?'-':r.followers.toLocaleString('ko-KR'),'num'));
+    tr.appendChild(td(r.eng===null?'-':r.eng.toFixed(1)+'%','num'));
+    let ab;
+    if(r.acct.indexOf('프로페셔널')===0) ab = badge('프로페셔널','b-pro');
+    else if(r.acct.indexOf('개인')===0) { ab = badge('개인 (지표 불가)','b-personal'); ab.title='개인 계정은 공식 API로 팔로워·참여율을 확인할 수 없습니다.'; }
+    else ab = badge(r.acct || '미확인','');
+    tr.appendChild(td(ab));
+    let vb;
+    if(r.status.indexOf('샘플')>=0) { vb = badge('샘플','b-sample'); vb.title='가상 샘플이며 검증된 데이터가 아닙니다.'; }
+    else if(/공식확인|외부확인|검증완료/.test(r.status)) vb = badge(r.status,'b-ver');
+    else vb = badge(r.status || '미확인','');
+    tr.appendChild(td(vb));
+    tr.addEventListener('click', ()=>{ state.sel = r.id; renderList(); renderDraft(); });
+    body.appendChild(tr);
+  });
+}
+
+function renderDraft(){
+  const box = $('draft'), notes = $('notes'), who = $('who');
+  notes.textContent = ''; $('msg').textContent = ''; $('msg').className = '';
+  const cand = state.rows.find(r=>r.id===state.sel);
+  if(!cand){
+    box.className = 'draftbox blank';
+    box.innerHTML = '';
+    box.appendChild(document.createTextNode('왼쪽 목록에서 후보를 고르면'));
+    box.appendChild(document.createElement('br'));
+    box.appendChild(document.createTextNode('영어 이메일 초안이 나옵니다.'));
+    who.textContent = ''; $('btnCopy').disabled = true; state.current = null; return;
+  }
+  const d = buildDraft(cand, {
+    product:$('product').value, company:$('sCompany').value,
+    sender:$('sName').value, senderEmail:$('sEmail').value
+  });
+  state.current = d;
+  who.textContent = '받는 사람: ' + cand.name + ' (@' + cand.handle + ')' + (cand.email ? ' · ' + cand.email : '');
+  box.className = 'draftbox'; box.textContent = '';
+  d.text.split(/(\[[^\]]+\])/).forEach(part=>{
+    if(/^\[[^\]]+\]$/.test(part)){
+      const s = document.createElement('span'); s.className='ph'; s.textContent=part; box.appendChild(s);
+    } else if(part) box.appendChild(document.createTextNode(part));
+  });
+  $('btnCopy').disabled = false;
+  cautions(cand).forEach(t=>{ const li=document.createElement('li'); li.textContent=t; notes.appendChild(li); });
+}
+
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }
+  catch(e){
+    const ta = document.createElement('textarea'); ta.value=t; ta.setAttribute('readonly','');
+    ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select();
+    let ok=false; try{ ok = document.execCommand('copy'); }catch(_){} ta.remove(); return ok;
+  }
+}
+
+$('btnCopy').addEventListener('click', async ()=>{
+  if(!state.current) return;
+  const ok = await copyText(state.current.text);
+  const m = $('msg');
+  if(!ok){ m.className='err'; m.textContent='복사하지 못했습니다. 초안을 직접 선택해 복사하세요.'; return; }
+  if(state.current.missing.length){
+    m.className='err'; m.textContent='복사했습니다. 아직 비어 있는 항목: ' + state.current.missing.join(', ');
+  } else { m.className=''; m.textContent='복사했습니다.'; }
+});
+
+['fCountry','fCat','fSort'].forEach(id=>$(id).addEventListener('change', ()=>{ renderList(); renderDraft(); }));
+['product','sCompany','sName','sEmail'].forEach(id=>$(id).addEventListener('input', renderDraft));
+
+$('btnLoad').addEventListener('click', ()=>$('file').click());
+$('file').addEventListener('change', e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const rd = new FileReader();
+  rd.onload = ()=>{
+    const res = mapCsv(parseCSV(String(rd.result)));
+    if(res.error){ $('src').textContent = '불러오지 못했습니다: ' + res.error; return; }
+    if(!res.list.length){ $('src').textContent = '불러오지 못했습니다: 표시명과 핸들이 있는 행이 없습니다.'; return; }
+    state.rows = res.list; state.sel = null;
+    state.src = f.name + ' (' + res.list.length + '건' + (res.skipped ? ', 표시명·핸들이 없어 제외 ' + res.skipped + '건' : '') + ')';
+    refreshFilters(); renderList(); renderDraft();
+  };
+  rd.onerror = ()=>{ $('src').textContent = '불러오지 못했습니다: 파일을 읽을 수 없습니다.'; };
+  rd.readAsText(f, 'utf-8');
+  e.target.value = '';
+});
+$('btnReset').addEventListener('click', ()=>{
+  state.rows = SAMPLE.slice(); state.sel = null; state.src = '내장 샘플 5건';
+  refreshFilters(); renderList(); renderDraft();
+});
+
+refreshFilters(); renderList(); renderDraft();
+</script>
+</body>
+</html>
